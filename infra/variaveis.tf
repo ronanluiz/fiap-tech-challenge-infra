@@ -1,6 +1,11 @@
-variable "repositorio_api" {
+variable "nome_repositorio_api" {
   type = string
   default = "api"
+}
+
+variable "nome_repositorio_webhook" {
+  type = string
+  default = "webhook"
 }
 
 variable "regiao" {
@@ -13,10 +18,10 @@ variable "bucket_backend" {
   default = "tech-challenge-soat10"
 }
 
-variable "environment" {
+variable "ambiente" {
   type = string
 }
 
-variable "cluster_eks_name" {
+variable "nome_cluster_eks" {
   type = string
 }

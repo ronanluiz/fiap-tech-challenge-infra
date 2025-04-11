@@ -1,6 +1,5 @@
 module "prod" {
   source          = "../../infra"
-  repositorio_api = "api-prd"
   environment     = "prod"
   cluster_eks_name = "eks-prd-techchallange"
 }

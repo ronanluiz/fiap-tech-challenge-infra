@@ -1,6 +1,5 @@
 module "dev" {
   source          = "../../infra"
-  repositorio_api = "api-dev"
   environment     = "dev"
   cluster_eks_name = "eks-dev-techchallange"
 }
