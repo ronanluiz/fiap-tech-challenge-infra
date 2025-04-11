@@ -16,3 +16,7 @@ variable "bucket_backend" {
 variable "environment" {
   type = string
 }
+
+variable "cluster_eks_name" {
+  type = string
+}

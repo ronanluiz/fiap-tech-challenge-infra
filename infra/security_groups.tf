@@ -49,3 +49,30 @@ resource "aws_security_group_rule" "saida_cluster_eks" {
   cidr_blocks       = ["0.0.0.0/0"]
   security_group_id = aws_security_group.cluster_eks_privado.id
 }
+
+
+resource "aws_security_group" "cluster_ssh" {
+  name   = "sg_cluster_ssh"
+  vpc_id = module.vpc.vpc_id
+  tags = {
+    Name = "sg_cluster_ssh"
+  }
+}
+
+resource "aws_security_group_rule" "entrada_cluster_ssh" {
+  type              = "ingress"
+  from_port         = 22
+  to_port           = 22
+  protocol          = "tcp"
+  cidr_blocks       = ["0.0.0.0/0"] # permite qualquer range de ip
+  security_group_id = aws_security_group.cluster_ssh.id
+}
+
+resource "aws_security_group_rule" "saida_cluster_ssh" {
+  type              = "egress"
+  from_port         = 0
+  to_port           = 0
+  protocol          = "-1" # permite qualquer protocolo
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = aws_security_group.cluster_ssh.id
+}

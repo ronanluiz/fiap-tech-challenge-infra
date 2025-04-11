@@ -10,3 +10,11 @@ module "vpc" {
 
   enable_nat_gateway = true
 }
+
+output "vpc_id" {
+  value = module.vpc.vpc_id
+}
+
+output "vpc_arn" {
+  value = module.vpc.vpc_arn
+}

@@ -11,17 +11,10 @@ aws_session_token=
 ```
 Adicionei uma entrada no arquivo `~/.aws/config` para especificar a região padrão.
 ```
-[profile fiap]
+[profile default]
 region = us-east-1
 ```
 
-## Terraform
-
-Para inicialização do terraform crie um arquivo terraform.tfvars com os seguintes dados:
-```
-aws_profile = "fiap"
-aws_region = "us-east-1"
-```
-
-Execute o comando de inicialização da seguinte forma:
-`terraform init -backend-config "profile=fiap"`
+# Comandos de referência
+Para autenticação no ECR a partir da linha de comando:
+`aws ecr get-login-password --region region | docker login --username AWS --password-stdin aws_account_id.dkr.ecr.region.amazonaws.com`
