@@ -4,7 +4,7 @@
 
 No arquivo `~./aws/credentials` defina as credenciais em profile customizado:
 ```
-[fiap]
+[default]
 aws_access_key_id=
 aws_secret_access_key=
 aws_session_token=
