@@ -9,7 +9,7 @@ on:
 jobs:
   validacao_autenticacao_aws:
     name: "Validação de autenticação na AWS"
-    run-on: ubuntu-latest
+    runs-on: ubuntu-latest
     steps:
       - name: Configurar credenciais AWS
         uses: aws-actions/configure-aws-credentials@v2
