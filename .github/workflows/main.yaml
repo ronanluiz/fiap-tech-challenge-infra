@@ -1,5 +1,4 @@
-name: "Infraestrutura básica para as aplicações"
-
+name: "Criação de Infraestrutura básica para as aplicações"
 on:
   push:
     branches: 
@@ -7,8 +6,8 @@ on:
   pull_request:
 
 jobs:
-  validacao_autenticacao_aws:
-    name: "Validação de autenticação na AWS"
+  cria_infra:
+    name: "Criação de infra para aplicações do techchallenge"
     runs-on: ubuntu-latest
     steps:
       - name: Checkout do repositório
@@ -24,4 +23,21 @@ jobs:
       
       - name: Realiza setup do Terraform
         run: ./setup.sh
+
+      - name: Setup do Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.11.3"
+
+      - name: Terraform Format
+        id: fmt
+        run: terraform -chdir=env/dev fmt -check
+
+      - name: Terraform Init
+        id: init
+        run: terraform -chdir=env/dev init
+      
+      - name: Terraform Validate
+        id: validate
+        run: terraform -chdir=env/dev validate -no-color
       
