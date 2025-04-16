@@ -19,5 +19,6 @@ jobs:
           aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
           aws-region: ${{ vars.AWS_REGION }}
       
-      - name: Valida credenciais AWS
-        run: aws sts get-caller-identity
+      - name: Realiza setup do Terraform
+        run: ./setup.sh
+      
