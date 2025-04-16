@@ -2,7 +2,8 @@ name: "Infraestrutura básica para as aplicações"
 
 on:
   push:
-    branches: [ main, feature/criacao-cluster-eks ]
+    branches: 
+      - '**'    # Aceita push em qualquer branch
   pull_request:
 
 jobs:
