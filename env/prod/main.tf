@@ -1,7 +1,7 @@
 module "prod" {
   source          = "../../infra"
-  environment     = "prod"
-  cluster_eks_name = "eks-prd-techchallange"
+  ambiente = "prod"
+  nome_cluster_eks = "eks-prd-techchallange"
 }
 
 output "alb_techchallenge_ip" {
