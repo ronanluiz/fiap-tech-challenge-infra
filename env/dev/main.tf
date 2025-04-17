@@ -1,6 +1,6 @@
 module "dev" {
-  source          = "../../infra"
-  ambiente = "dev"
+  source           = "../../infra"
+  ambiente         = "dev"
   nome_cluster_eks = "eks-dev-techchallange"
 }
 

@@ -1,7 +1,7 @@
 resource "aws_lb" "alb_techchallenge" {
-  name               = "alb-techchallenge"
-  security_groups    = [aws_security_group.alb.id]
-  subnets            = [module.vpc.public_subnets[0], module.vpc.public_subnets[1]]
+  name            = "alb-techchallenge"
+  security_groups = [aws_security_group.alb.id]
+  subnets         = [module.vpc.public_subnets[0], module.vpc.public_subnets[1]]
 }
 
 resource "aws_lb_listener" "http_port_80" {
