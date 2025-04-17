@@ -4,7 +4,8 @@ on:
     branches: 
       - main   # Aceita push em qualquer branch
   pull_request:
-
+env:
+  AMBIENTE: ${{ (github.ref == 'refs/heads/main' || github.event_name == 'pull_request') && 'prod' || 'dev' }}
 jobs:
   cria_infra:
     name: "Criação de infra para aplicações do techchallenge"
@@ -31,20 +32,20 @@ jobs:
 
       - name: Terraform Format
         id: fmt
-        run: terraform -chdir=env/dev fmt -check
+        run: terraform -chdir=env/${process.env.AMBIENTE} fmt -check
 
       - name: Terraform Init
         id: init
-        run: terraform -chdir=env/dev init
+        run: terraform -chdir=env/${process.env.AMBIENTE} init
       
       - name: Terraform Validate
         id: validate
-        run: terraform -chdir=env/dev validate -no-color
+        run: terraform -chdir=env/${process.env.AMBIENTE} validate -no-color
 
       - name: Terraform Plan
         id: plan
         if: github.event_name == 'pull_request'
-        run: terraform -chdir=env/dev plan -no-color -input=false
+        run: terraform -chdir=env/${process.env.AMBIENTE} plan -no-color -input=false
         continue-on-error: true
 
       - name: Atualização do Pull Request
@@ -82,5 +83,5 @@ jobs:
 
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-        run: terraform -chdir=env/dev apply -auto-approve -input=false
+        run: terraform -chdir=env/${process.env.AMBIENTE} apply -auto-approve -input=false
       
