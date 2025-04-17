@@ -24,7 +24,7 @@ jobs:
 
       - name: Terraform Init
         id: init
-        run: terraform -chdir=env/dev init
+        run: terraform -chdir=env/prod init
         
       - name: Desprovisionando infra
-        run: terraform -chdir=env/dev destroy -auto-approve
+        run: terraform -chdir=env/prod destroy -auto-approve
