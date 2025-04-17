@@ -2,7 +2,7 @@ name: "Criação de Infraestrutura básica para as aplicações"
 on:
   push:
     branches: 
-      - '**'    # Aceita push em qualquer branch
+      - main   # Aceita push em qualquer branch
   pull_request:
 
 jobs:
@@ -48,12 +48,11 @@ jobs:
         continue-on-error: true
 
       - name: Update Pull Request
-        uses: actions/github-script@v6
+        uses: actions/github-script@v7
         if: github.event_name == 'pull_request'
         env:
           PLAN: ${{ steps.plan.outputs.stdout }}
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const output = `#### Terraform Format and Style 🖌\`${{ steps.fmt.outcome }}\`
             #### Terraform Initialization ⚙️\`${{ steps.init.outcome }}\`
