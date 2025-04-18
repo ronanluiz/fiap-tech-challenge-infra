@@ -1,5 +1,5 @@
 resource "aws_lb" "alb_techchallenge" {
-  name            = "alb-techchallenge-${vars.ambiente}"
+  name            = "alb-techchallenge-${var.ambiente}"
   security_groups = [aws_security_group.alb.id]
   subnets         = [module.vpc.public_subnets[0], module.vpc.public_subnets[1]]
 }
@@ -15,7 +15,7 @@ resource "aws_lb_listener" "http_port_80" {
 }
 
 resource "aws_lb_target_group" "ip_port_80" {
-  name        = "alb-techchallenge-${vars.ambiente}"
+  name        = "alb-techchallenge-${var.ambiente}"
   port        = 80
   protocol    = "HTTP"
   target_type = "ip"

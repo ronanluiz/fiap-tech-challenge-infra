@@ -1,7 +1,7 @@
 module "vpc" {
   source = "terraform-aws-modules/vpc/aws"
 
-  name = "vpc-techchallenge"
+  name = "vpc-techchallenge-${var.ambiente}"
   cidr = "10.0.0.0/16" #range: 10.0.1.1 - 10.0.255.255
 
   azs             = ["us-east-1a", "us-east-1b"]
