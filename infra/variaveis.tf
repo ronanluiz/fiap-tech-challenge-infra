@@ -8,6 +8,11 @@ variable "nome_repositorio_webhook" {
   default = "webhook"
 }
 
+variable "nome_repositorio_autenticacao" {
+  type    = string
+  default = "autenticacao"
+}
+
 variable "regiao" {
   type    = string
   default = "us-east-1"

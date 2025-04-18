@@ -1,6 +1,13 @@
 name: "Desprovisionamento de infraestrutura básica para as aplicações"
 on:
   workflow_dispatch:
+    inputs:
+      ambiente:
+        type: choice
+        description: Ambiente
+        options: 
+        - dev
+        - prod
 
 jobs:
   destroi_infra:
@@ -24,7 +31,7 @@ jobs:
 
       - name: Terraform Init
         id: init
-        run: terraform -chdir=env/prod init
+        run: terraform -chdir=env/${{ github.event.inputs.ambiente }} init
         
       - name: Desprovisionando infra
-        run: terraform -chdir=env/prod destroy -auto-approve
+        run: terraform -chdir=env/${{ github.event.inputs.ambiente }} destroy -auto-approve

@@ -1,8 +1,7 @@
 name: "Criação de Infraestrutura básica para as aplicações"
 on:
   push:
-    branches: 
-      - main   # Aceita push em qualquer branch
+    branches: [main, develop]   # Aceita push em qualquer branch
   pull_request:
 env:
   AMBIENTE: ${{ (github.ref == 'refs/heads/main' || github.event_name == 'pull_request') && 'prod' || 'dev' }}
@@ -44,7 +43,7 @@ jobs:
 
       - name: Terraform Plan
         id: plan
-        if: github.event_name == 'pull_request'
+        if: github.event_name == 'pull_request' || github.ref == 'refs/heads/develop'
         run: terraform -chdir=env/$AMBIENTE plan -no-color -input=false
         continue-on-error: true
 
@@ -82,6 +81,6 @@ jobs:
         run: exit 1
 
       - name: Terraform Apply
-        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        if: (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop') && github.event_name == 'push'
         run: terraform -chdir=env/$AMBIENTE apply -auto-approve -input=false
       
