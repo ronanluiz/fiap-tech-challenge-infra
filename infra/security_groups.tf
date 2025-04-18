@@ -1,5 +1,5 @@
 resource "aws_security_group" "alb" {
-  name   = "sg_alb_port_80"
+  name   = "sg_alb_port_80-${vars.ambiente}"
   vpc_id = module.vpc.vpc_id
   tags = {
     Name = "sg_alb_port_80"
@@ -25,10 +25,10 @@ resource "aws_security_group_rule" "saida_alb" {
 }
 
 resource "aws_security_group" "cluster_eks_privado" {
-  name   = "sg_cluster_eks_privado"
+  name   = "sg_cluster_eks_privado-${vars.ambiente}"
   vpc_id = module.vpc.vpc_id
   tags = {
-    Name = "sg_cluster_eks_privado"
+    Name = "sg_cluster_eks_privado-${vars.ambiente}"
   }
 }
 
@@ -52,10 +52,10 @@ resource "aws_security_group_rule" "saida_cluster_eks" {
 
 
 resource "aws_security_group" "cluster_ssh" {
-  name   = "sg_cluster_ssh"
+  name   = "sg_cluster_ssh-${vars.ambiente}"
   vpc_id = module.vpc.vpc_id
   tags = {
-    Name = "sg_cluster_ssh"
+    Name = "sg_cluster_ssh-${vars.ambiente}"
   }
 }
 
