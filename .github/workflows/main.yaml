@@ -39,7 +39,7 @@ jobs:
       
       - name: Terraform Validate
         id: validate
-        run: terraform -chdir=terraform -var "ambiente=$AMBIENTE" validate -no-color
+        run: terraform -chdir=terraform validate -no-color
 
       - name: Terraform Plan
         id: plan
