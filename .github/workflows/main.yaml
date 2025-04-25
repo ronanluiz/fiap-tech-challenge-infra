@@ -44,7 +44,7 @@ jobs:
       - name: Terraform Plan
         id: plan
         if: github.event_name == 'pull_request' || github.ref == 'refs/heads/develop'
-        run: terraform -chdir=terraform -var "ambiente=$AMBIENTE" plan -no-color -input=false
+        run: terraform -chdir=terraform plan -var "ambiente=$AMBIENTE" -no-color -input=false
         continue-on-error: true
 
       - name: Atualização do Pull Request
@@ -82,5 +82,5 @@ jobs:
 
       - name: Terraform Apply
         if: (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop') && github.event_name == 'push'
-        run: terraform -chdir=terraform -var "ambiente=$AMBIENTE" apply -auto-approve -input=false
+        run: terraform -chdir=terraform apply -var "ambiente=$AMBIENTE" -auto-approve -input=false
       
