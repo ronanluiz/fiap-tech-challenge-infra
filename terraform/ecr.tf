@@ -1,7 +1,7 @@
 resource "aws_ecr_repository" "repositorio_api" {
-  name = var.nome_repositorio_api
+  name = "${local.projeto}-api"
 }
 
 resource "aws_ecr_repository" "repositorio_webhook" {
-  name = var.nome_repositorio_webhook
+  name = "${local.projeto}-webhook"
 }

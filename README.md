@@ -18,3 +18,6 @@ region = us-east-1
 # Comandos de referência
 Para autenticação no ECR a partir da linha de comando:
 `aws ecr get-login-password --region region | docker login --username AWS --password-stdin aws_account_id.dkr.ecr.region.amazonaws.com`
+
+Para conceder permissão ao arquivo setup.sh
+`chmod +x setup.sh`

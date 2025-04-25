@@ -31,20 +31,20 @@ jobs:
 
       - name: Terraform Format
         id: fmt
-        run: terraform -chdir=env/$AMBIENTE fmt -check
+        run: terraform -chdir=terraform fmt -check
 
       - name: Terraform Init
         id: init
-        run: terraform -chdir=env/$AMBIENTE init
+        run: terraform -chdir=terraform init
       
       - name: Terraform Validate
         id: validate
-        run: terraform -chdir=env/$AMBIENTE validate -no-color
+        run: terraform -chdir=terraform -var ambiente=$AMBIENTE validate -no-color
 
       - name: Terraform Plan
         id: plan
         if: github.event_name == 'pull_request' || github.ref == 'refs/heads/develop'
-        run: terraform -chdir=env/$AMBIENTE plan -no-color -input=false
+        run: terraform -chdir=terraform -var ambiente=$AMBIENTE plan -no-color -input=false
         continue-on-error: true
 
       - name: Atualização do Pull Request
@@ -82,5 +82,5 @@ jobs:
 
       - name: Terraform Apply
         if: (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop') && github.event_name == 'push'
-        run: terraform -chdir=env/$AMBIENTE apply -auto-approve -input=false
+        run: terraform -chdir=terraform -var ambiente=$AMBIENTE apply -auto-approve -input=false
       
