@@ -1,11 +1,11 @@
-resource "aws_lb" "alb_techchallenge" {
+resource "aws_lb" "alb" {
   name            = "${local.projeto}-alb"
   security_groups = [aws_security_group.alb.id]
   subnets         = flatten([module.vpc.public_subnets])
 }
 
 resource "aws_lb_listener" "http_port_80" {
-  load_balancer_arn = aws_lb.alb_techchallenge.arn
+  load_balancer_arn = aws_lb.alb.arn
   port              = "80"
   protocol          = "HTTP"
   default_action {
