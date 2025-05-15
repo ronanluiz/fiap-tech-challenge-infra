@@ -6,19 +6,28 @@ module "vpc" {
 
   azs             = ["${var.regiao}a", "${var.regiao}b"]
   private_subnets = ["10.0.1.0/24", "10.0.2.0/24"]
-  public_subnets  = ["10.0.101.0/24", "10.0.102.0/24"]
+  private_subnet_tags = {
+    "tier" = "private"
+  }
+  public_subnets = ["10.0.101.0/24", "10.0.102.0/24"]
+  public_subnet_tags = {
+    "tier" = "public"
+  }
 
   enable_nat_gateway     = true
   single_nat_gateway     = true  # Usar apenas um NAT Gateway
   one_nat_gateway_per_az = false # Não criar um NAT Gateway por AZ
+
+  enable_dns_hostnames = true
+  enable_dns_support   = true
 }
 
 
-resource "aws_security_group" "alb" {
-  name   = "${local.projeto}-alb-sg"
+resource "aws_security_group" "cluster_eks_port_80" {
+  name   = "${local.projeto}-cluster-eks-port-80-sg"
   vpc_id = module.vpc.vpc_id
   tags = {
-    Name = "${local.projeto}-alb-sg"
+    Name = "${local.projeto}-cluster-eks-port-80-sg"
   }
 
   ingress {
@@ -26,7 +35,7 @@ resource "aws_security_group" "alb" {
     to_port     = 80
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"] # permite qualquer range de ip
-    description = "Enable access from lambda function"
+    description = "Enable access from port 80"
   }
 
   egress {
@@ -37,38 +46,11 @@ resource "aws_security_group" "alb" {
   }
 }
 
-resource "aws_security_group" "cluster_eks_privado" {
-  name   = "${local.projeto}-cluster-eks-sg"
-  vpc_id = module.vpc.vpc_id
-  tags = {
-    Name = "sg_cluster_eks_privado-${var.ambiente}"
-  }
-}
-
-resource "aws_security_group_rule" "entrada_cluster_eks" {
-  type                     = "ingress"
-  from_port                = 30000
-  to_port                  = 30004
-  protocol                 = "tcp"
-  security_group_id        = aws_security_group.cluster_eks_privado.id
-  source_security_group_id = aws_security_group.alb.id # Somente solicitações do load balancer
-}
-
-resource "aws_security_group_rule" "saida_cluster_eks" {
-  type              = "egress"
-  from_port         = 0
-  to_port           = 0
-  protocol          = "-1" # permite qualquer protocolo
-  cidr_blocks       = ["0.0.0.0/0"]
-  security_group_id = aws_security_group.cluster_eks_privado.id
-}
-
-
 resource "aws_security_group" "cluster_ssh" {
-  name   = "${local.projeto}-cluster-sg"
+  name   = "${local.projeto}-cluster-ssh-sg"
   vpc_id = module.vpc.vpc_id
   tags = {
-    Name = "${local.projeto}-cluster-sg"
+    Name = "${local.projeto}-cluster-ssh-sg"
   }
 
   ingress {
