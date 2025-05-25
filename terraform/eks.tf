@@ -8,7 +8,7 @@ resource "aws_eks_cluster" "eks_cluster" {
   role_arn = data.aws_iam_role.lab_role.arn
 
   vpc_config {
-    subnet_ids         = flatten([module.vpc.public_subnets, module.vpc.private_subnets])
+    subnet_ids = flatten([module.vpc.public_subnets, module.vpc.private_subnets])
   }
 }
 
