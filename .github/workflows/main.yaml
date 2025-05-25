@@ -1,7 +1,7 @@
 name: "Criação de Infraestrutura básica para as aplicações"
 on:
   push:
-    branches: [main, develop]   # Aceita push em qualquer branch
+    branches: [main, develop]
   pull_request:
 env:
   AMBIENTE: ${{ (github.ref_name == 'main' || github.event_name == 'pull_request') && 'prod' || 'dev' }}
