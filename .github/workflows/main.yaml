@@ -4,11 +4,21 @@ on:
     branches: [main, develop]
   pull_request:
 env:
-  AMBIENTE: ${{ (github.ref_name == 'main' || github.event_name == 'pull_request') && 'prod' || 'dev' }}
+  ENVIRONMENT: ${{ (github.ref_name == 'main' || github.event_name == 'pull_request') && 'prod' || 'dev' }}
 jobs:
+  setup:
+    runs-on: ubuntu-latest
+    outputs:
+      environment: ${{ env.ENVIRONMENT }}
+    steps:
+      - name: Set outputs
+        run: echo "environment=$ENVIRONMENT" >> $GITHUB_OUTPUT
   cria_infra:
     name: "Criação de infra para aplicações do techchallenge"
+    needs: setup
     runs-on: ubuntu-latest
+    env:
+      TF_VAR_enviroment: ${{ needs.setup.outputs.environment }}
     steps:
       - name: Checkout do repositório
         uses: actions/checkout@v4.2.2
@@ -44,7 +54,7 @@ jobs:
       - name: Terraform Plan
         id: plan
         if: github.event_name == 'pull_request' || github.ref_name == 'develop'
-        run: terraform -chdir=terraform plan -var "ambiente=$AMBIENTE" -no-color -input=false
+        run: terraform -chdir=terraform plan -no-color -input=false
         continue-on-error: true
 
       - name: Atualização do Pull Request
@@ -82,5 +92,5 @@ jobs:
 
       - name: Terraform Apply
         if: (github.ref_name == 'main' || github.ref_name == 'develop') && github.event_name == 'push'
-        run: terraform -chdir=terraform apply -var "ambiente=$AMBIENTE" -auto-approve -input=false
+        run: terraform -chdir=terraform apply -auto-approve -input=false
       
