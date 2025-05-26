@@ -18,7 +18,7 @@ jobs:
     needs: setup
     runs-on: ubuntu-latest
     env:
-      TF_VAR_enviroment: ${{ needs.setup.outputs.environment }}
+      TF_VAR_environment: ${{ needs.setup.outputs.environment }}
     steps:
       - name: Checkout do repositório
         uses: actions/checkout@v4.2.2
