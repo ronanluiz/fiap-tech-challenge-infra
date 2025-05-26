@@ -1,10 +1,10 @@
 module "vpc" {
   source = "terraform-aws-modules/vpc/aws"
 
-  name = "${local.projeto}-vpc"
+  name = "${local.project}-vpc"
   cidr = "10.0.0.0/16" #range: 10.0.1.1 - 10.0.255.255
 
-  azs             = ["${var.regiao}a", "${var.regiao}b"]
+  azs             = ["${var.region}a", "${var.region}b"]
   private_subnets = ["10.0.1.0/24", "10.0.2.0/24"]
   private_subnet_tags = {
     "tier" = "private"

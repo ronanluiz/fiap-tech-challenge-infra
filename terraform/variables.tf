@@ -1,13 +1,13 @@
 locals {
-  projeto = "${var.ambiente}-tc-soat10"
+  project = "${var.environment}-tc-soat10"
 }
 
-variable "regiao" {
+variable "region" {
   type    = string
   default = "us-east-1"
 }
 
-variable "ambiente" {
+variable "environment" {
   type    = string
   default = "dev"
 }
