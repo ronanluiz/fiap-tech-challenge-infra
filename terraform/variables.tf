@@ -1,5 +1,6 @@
 locals {
   project              = "${var.environment}-tc-soat10"
+  vpc_name             = "tc-soat10-vpc"
   ecr_api_name         = "tc-soat10-ecr-api"
   ecr_webhook_name     = "tc-soat10-ecr-webhook"
   eks_name             = "tc-soat10-eks-cluster"
