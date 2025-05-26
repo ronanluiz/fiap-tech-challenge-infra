@@ -10,11 +10,11 @@ terraform {
 }
 
 provider "aws" {
-  region = "us-east-1"
+  region = var.region
 
   default_tags {
     tags = {
-      environment = var.ambiente
+      environment = var.environment
       terraform   = "true"
     }
   }
