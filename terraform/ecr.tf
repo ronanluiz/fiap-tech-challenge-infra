@@ -1,9 +1,9 @@
 resource "aws_ecr_repository" "repositorio_api" {
-  name         = "${local.project}-api"
+  name         = local.ecr_api_name
   force_delete = true
 }
 
 resource "aws_ecr_repository" "repositorio_webhook" {
-  name         = "${local.project}-webhook"
+  name         = local.ecr_webhook_name
   force_delete = true
 }

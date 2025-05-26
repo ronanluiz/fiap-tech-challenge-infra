@@ -1,8 +1,8 @@
 resource "aws_security_group" "cluster_eks_port_80" {
-  name   = "${local.project}-cluster-eks-port-80-sg"
+  name   = "${local.eks_name}-port-80-sg"
   vpc_id = module.vpc.vpc_id
   tags = {
-    Name = "${local.project}-cluster-eks-port-80-sg"
+    Name = "${local.eks_name}-port-80-sg"
   }
 
   ingress {
@@ -22,10 +22,10 @@ resource "aws_security_group" "cluster_eks_port_80" {
 }
 
 resource "aws_security_group" "cluster_ssh" {
-  name   = "${local.project}-cluster-ssh-sg"
+  name   = "${local.eks_name}-ssh-sg"
   vpc_id = module.vpc.vpc_id
   tags = {
-    Name = "${local.project}-cluster-ssh-sg"
+    Name = "${local.eks_name}-ssh-sg"
   }
 
   ingress {

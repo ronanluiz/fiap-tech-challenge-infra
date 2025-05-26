@@ -4,7 +4,7 @@ data "aws_iam_role" "lab_role" {
 }
 
 resource "aws_eks_cluster" "eks_cluster" {
-  name     = "${local.project}-cluster-eks"
+  name     = local.eks_name
   role_arn = data.aws_iam_role.lab_role.arn
 
   vpc_config {
@@ -14,7 +14,7 @@ resource "aws_eks_cluster" "eks_cluster" {
 
 resource "aws_eks_node_group" "eks_node_group" {
   cluster_name    = aws_eks_cluster.eks_cluster.name
-  node_group_name = "${local.project}-eks-node-group"
+  node_group_name = local.eks_node_groups_name
   node_role_arn   = data.aws_iam_role.lab_role.arn
   subnet_ids      = flatten([module.vpc.private_subnets])
 
