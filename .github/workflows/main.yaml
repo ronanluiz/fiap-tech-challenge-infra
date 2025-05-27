@@ -12,9 +12,9 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       environment: ${{ (github.ref_name == 'main' || github.event_name == 'pull_request') && 'prod' || 'dev' }}  
-      enable_plan: ${{ github.event_name == 'pull_request' || github.ref_name == 'develop' }}
-      enable_apply: ${{ (github.ref_name == 'main' || github.ref_name == 'develop') && github.event_name == 'push' }}
-      is_pull_request: ${{ github.event_name == 'pull_request' }}
+      enable_plan: ${{ (github.event_name == 'pull_request' || github.ref_name == 'develop') && 'true' || 'false' }}
+      enable_apply: ${{ ((github.ref_name == 'main' || github.ref_name == 'develop') && github.event_name == 'push') && 'true' || 'false' }}
+      is_pull_request: ${{ github.event_name == 'pull_request' && 'true' || 'false' }}
     steps:
       - run: echo "Job initialized with dynamic outputs"
   
