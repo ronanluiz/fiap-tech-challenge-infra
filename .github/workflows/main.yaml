@@ -11,18 +11,12 @@ jobs:
   init:
     runs-on: ubuntu-latest
     outputs:
-      environment: ${{ steps.set-outputs.outputs.environment }}  
-      enable_plan: ${{ steps.set-outputs.outputs.enable_plan }}  
-      enable_apply: ${{ steps.set-outputs.outputs.enable_apply }}  
-      is_pull_request: ${{ steps.set-outputs.outputs.is_pull_request }}
+      environment: ${{ (github.ref_name == 'main' || github.event_name == 'pull_request') && 'prod' || 'dev' }}  
+      enable_plan: ${{ github.event_name == 'pull_request' || github.ref_name == 'develop' }}
+      enable_apply: ${{ (github.ref_name == 'main' || github.ref_name == 'develop') && github.event_name == 'push' }}
+      is_pull_request: ${{ github.event_name == 'pull_request' }}
     steps:
-      - name: Set outputs
-        id: set-outputs
-        run: |
-          echo "environment=${{ (github.ref_name == 'main' || github.event_name == 'pull_request') && 'prod' || 'dev' }}" >> $GITHUB_OUTPUT
-          echo "enable_plan=${{ github.event_name == 'pull_request' || github.ref_name == 'develop' }}" >> $GITHUB_OUTPUT
-          echo "enable_apply=${{ (github.ref_name == 'main' || github.ref_name == 'develop') && github.event_name == 'push' }}" >> $GITHUB_OUTPUT
-          echo "is_pull_request=${{ github.event_name == 'pull_request' }}" >> $GITHUB_OUTPUT
+      - run: echo "Job initialized with dynamic outputs"
   
   terraform_common:      
     needs: init
