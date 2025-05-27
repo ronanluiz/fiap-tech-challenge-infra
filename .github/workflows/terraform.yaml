@@ -9,23 +9,21 @@ on:
         type: string
       enable_plan:
         required: true
-        type: boolean
+        type: string
       enable_apply:
         required: true
-        type: boolean
+        type: string
       is_pull_request:
         required: true
         type: boolean
 permissions:
   issues: write
   pull-requests: write
-env:
-  ENVIRONMENT: ${{ (github.ref_name == 'main' || github.event_name == 'pull_request') && 'prod' || 'dev' }}
 jobs:  
   terraform:    
     runs-on: ubuntu-latest
     env:
-      TF_VAR_environment: ${{ needs.setup.outputs.environment }}
+      TF_VAR_environment: ${{ inputs.enable_apply }}
     steps:      
       - uses: actions/checkout@v4.2.2
       
@@ -59,13 +57,13 @@ jobs:
 
       - name: Terraform Plan
         id: plan
-        if: inputs.enable_plan
+        if: ${{ inputs.enable_plan == 'true'}} 
         run: terraform -chdir=${{inputs.terraform_dir}} plan -no-color -input=false
         continue-on-error: true
 
       - name: Atualização do Pull Request
         uses: actions/github-script@v7
-        if: inputs.is_pull_request
+        if: ${{ inputs.is_pull_request == 'true' }}
         env:
           PLAN: ${{ steps.plan.outputs.stdout }}
         with:
@@ -97,6 +95,6 @@ jobs:
         run: exit 1
 
       - name: Terraform Apply
-        if: inputs.enable_apply
+        if: ${{ inputs.enable_apply == 'true' }}
         run: terraform -chdir=${{inputs.terraform_dir}} apply -auto-approve -input=false
       
