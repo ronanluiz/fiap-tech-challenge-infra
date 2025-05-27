@@ -15,6 +15,8 @@ jobs:
       enable_plan: ${{ github.event_name == 'pull_request' || github.ref_name == 'develop' }}
       enable_apply: ${{ (github.ref_name == 'main' || github.ref_name == 'develop') && github.event_name == 'push' }}
       enable_write_comments: ${{ github.event_name == 'pull_request' }}
+    steps:
+      - uses: actions/checkout@v4.2.2
   
   terraform_common:      
     needs: init
@@ -26,6 +28,7 @@ jobs:
       enable_plan: ${{ needs.init.outputs.enable_plan }}
       enable_apply: ${{ needs.init.outputs.enable_apply }}
       enable_write_comments: ${{ needs.init.outputs.enable_write_comments }}
+  
   terraform_env:
     needs: init
     uses: ./.github/workflows/terraform.yaml
