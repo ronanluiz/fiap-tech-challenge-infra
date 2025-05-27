@@ -15,7 +15,7 @@ on:
         type: string
       is_pull_request:
         required: true
-        type: boolean
+        type: string
 permissions:
   issues: write
   pull-requests: write
