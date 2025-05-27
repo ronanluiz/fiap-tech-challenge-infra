@@ -14,8 +14,8 @@ provider "aws" {
 
   default_tags {
     tags = {
-      terraform   = "true",
-      project     = var.project_name
+      terraform = "true",
+      project   = var.project_name
     }
   }
 }

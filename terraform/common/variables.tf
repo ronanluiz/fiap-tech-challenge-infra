@@ -1,6 +1,6 @@
 locals {
-  ecr_api_name         = "tc-soat10-ecr-api"
-  ecr_webhook_name     = "tc-soat10-ecr-webhook"
+  ecr_api_name     = "tc-soat10-ecr-api"
+  ecr_webhook_name = "tc-soat10-ecr-webhook"
 }
 
 variable "region" {
