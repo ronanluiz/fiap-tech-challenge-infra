@@ -11,12 +11,41 @@ jobs:
   init:
     runs-on: ubuntu-latest
     outputs:
-      environment: ${{ (github.ref_name == 'main' || github.event_name == 'pull_request') && 'prod' || 'dev' }}  
-      enable_plan: ${{ (github.event_name == 'pull_request' || github.ref_name == 'develop') && 'true' || 'false' }}
-      enable_apply: ${{ ((github.ref_name == 'main' || github.ref_name == 'develop') && github.event_name == 'push') && 'true' || 'false' }}
-      is_pull_request: ${{ github.event_name == 'pull_request' && 'true' || 'false' }}
+      environment: ${{ steps.set-outputs.outputs.environment }}  
+      enable_plan: ${{ steps.set-outputs.outputs.enable_plan }}  
+      enable_apply: ${{ steps.set-outputs.outputs.enable_apply }}  
+      is_pull_request: ${{ steps.set-outputs.outputs.is_pull_request }}
     steps:
-      - run: echo "Job initialized with dynamic outputs"
+      - name: Set outputs
+        id: set-outputs
+        run: |
+          # Configuração do environment
+          if [[ "${{ github.ref_name }}" == "main" || "${{ github.event_name }}" == "pull_request" ]]; then
+            echo "environment=prod" >> $GITHUB_OUTPUT
+          else
+            echo "environment=dev" >> $GITHUB_OUTPUT
+          fi
+          
+          # Configuração do enable_plan
+          if [[ "${{ github.event_name }}" == "pull_request" || "${{ github.ref_name }}" == "develop" ]]; then
+            echo "enable_plan=true" >> $GITHUB_OUTPUT
+          else
+            echo "enable_plan=false" >> $GITHUB_OUTPUT
+          fi
+          
+          # Configuração do enable_apply
+          if [[ ("${{ github.ref_name }}" == "main" || "${{ github.ref_name }}" == "develop") && "${{ github.event_name }}" == "push" ]]; then
+            echo "enable_apply=true" >> $GITHUB_OUTPUT
+          else
+            echo "enable_apply=false" >> $GITHUB_OUTPUT
+          fi
+          
+          # Configuração do is_pull_request
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            echo "is_pull_request=true" >> $GITHUB_OUTPUT
+          else
+            echo "is_pull_request=false" >> $GITHUB_OUTPUT
+          fi
   
   terraform_common:      
     needs: init
