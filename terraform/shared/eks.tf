@@ -4,7 +4,7 @@ data "aws_iam_role" "lab_role" {
 }
 
 resource "aws_eks_cluster" "eks_cluster" {
-  name     = local.eks_name
+  name     = var.eks_name
   role_arn = data.aws_iam_role.lab_role.arn
 
   vpc_config {

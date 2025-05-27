@@ -15,7 +15,8 @@ provider "aws" {
   default_tags {
     tags = {
       environment = var.environment
-      terraform   = "true"
+      terraform   = "true",
+      project     = var.project_name
     }
   }
 }

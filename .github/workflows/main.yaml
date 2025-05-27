@@ -7,94 +7,32 @@ on:
 permissions:
   issues: write
   pull-requests: write
-env:
-  ENVIRONMENT: ${{ (github.ref_name == 'main' || github.event_name == 'pull_request') && 'prod' || 'dev' }}
 jobs:
-  setup:
+  init:
     runs-on: ubuntu-latest
     outputs:
-      environment: ${{ env.ENVIRONMENT }}
-    steps:
-      - name: Set outputs
-        run: echo "environment=$ENVIRONMENT" >> $GITHUB_OUTPUT
-  cria_infra:
-    name: "Criação de infra para aplicações do techchallenge"
-    needs: setup
-    runs-on: ubuntu-latest
-    env:
-      TF_VAR_environment: ${{ needs.setup.outputs.environment }}
-    steps:
-      - name: Checkout do repositório
-        uses: actions/checkout@v4.2.2
-      
-      - name: Configurar credenciais AWS
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
-          aws-region: ${{ vars.AWS_REGION }}
-      
-      - name: Realiza setup do Terraform
-        run: ./setup.sh
-
-      - name: Setup do Terraform
-        uses: hashicorp/setup-terraform@v3
-        with:
-          terraform_version: "1.11.3"
-
-      - name: Terraform Format
-        id: fmt
-        run: terraform -chdir=terraform fmt -check
-
-      - name: Terraform Init
-        id: init
-        run: terraform -chdir=terraform init
-      
-      - name: Terraform Validate
-        id: validate
-        run: terraform -chdir=terraform validate -no-color
-
-      - name: Terraform Plan
-        id: plan
-        if: github.event_name == 'pull_request' || github.ref_name == 'develop'
-        run: terraform -chdir=terraform plan -no-color -input=false
-        continue-on-error: true
-
-      - name: Atualização do Pull Request
-        uses: actions/github-script@v7
-        if: github.event_name == 'pull_request'
-        env:
-          PLAN: ${{ steps.plan.outputs.stdout }}
-        with:
-          script: |
-            const output = `#### Terraform - Formatação e Estilo 🖌\`${{ steps.fmt.outcome }}\`
-            #### Terraform Init ⚙️\`${{ steps.init.outcome }}\`
-            #### Terraform Validação 🤖\`${{ steps.validate.outcome }}\`
-            #### Terraform Plan 📖\`${{ steps.plan.outcome }}\`
-
-            <details><summary>Detalhes do Terraform Plan</summary>
-
-            \`\`\`terraform\n
-            ${process.env.PLAN}
-            \`\`\`
-
-            </details>
-
-            *Enviado por: @${{ github.actor }}, Action: \`${{ github.event_name }}\`*`;
-
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: output
-            })
-
-      - name: Terraform Plan Status
-        if: steps.plan.outcome == 'failure'
-        run: exit 1
-
-      - name: Terraform Apply
-        if: (github.ref_name == 'main' || github.ref_name == 'develop') && github.event_name == 'push'
-        run: terraform -chdir=terraform apply -auto-approve -input=false
-      
+      environment: ${{ (github.ref_name == 'main' || github.event_name == 'pull_request') && 'prod' || 'dev' }}  
+      enable_plan: ${{ github.event_name == 'pull_request' || github.ref_name == 'develop' }}
+      enable_apply: ${{ (github.ref_name == 'main' || github.ref_name == 'develop') && github.event_name == 'push' }}
+      enable_write_comments: ${{ github.event_name == 'pull_request' }}
+  
+  terraform_common:      
+    needs: init
+    uses: ./.github/workflows/terraform.yaml
+    secrets: inherit
+    with:
+      environment: ${{ needs.init.outputs.environment }}
+      terraform_dir: "terraform/common"
+      enable_plan: ${{ needs.init.outputs.enable_plan }}
+      enable_apply: ${{ needs.init.outputs.enable_apply }}
+      enable_write_comments: ${{ needs.init.outputs.enable_write_comments }}
+  terraform_env:
+    needs: init
+    uses: ./.github/workflows/terraform.yaml
+    secrets: inherit
+    with:
+      environment: ${{ needs.init.outputs.environment }}
+      terraform_dir: "terraform/env/${{ needs.init.outputs.environment }}"
+      enable_plan: ${{ needs.init.outputs.enable_plan }}
+      enable_apply: ${{ needs.init.outputs.enable_apply }}
+      enable_write_comments: ${{ needs.init.outputs.enable_write_comments }}
