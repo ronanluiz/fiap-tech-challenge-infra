@@ -11,12 +11,18 @@ jobs:
   init:
     runs-on: ubuntu-latest
     outputs:
-      environment: ${{ (github.ref_name == 'main' || github.event_name == 'pull_request') && 'prod' || 'dev' }}  
-      enable_plan: ${{ github.event_name == 'pull_request' || github.ref_name == 'develop' }}
-      enable_apply: ${{ (github.ref_name == 'main' || github.ref_name == 'develop') && github.event_name == 'push' }}
-      enable_write_comments: ${{ github.event_name == 'pull_request' }}
+      environment: ${{ steps.set-outputs.outputs.environment }}  
+      enable_plan: ${{ steps.set-outputs.outputs.enable_plan }}  
+      enable_apply: ${{ steps.set-outputs.outputs.enable_apply }}  
+      is_pull_request: ${{ steps.set-outputs.outputs.is_pull_request }}
     steps:
-      - uses: actions/checkout@v4.2.2
+      - name: Set outputs
+        id: set-outputs
+        run: |
+          echo "environment=${{ (github.ref_name == 'main' || github.event_name == 'pull_request') && 'prod' || 'dev' }}" >> $GITHUB_OUTPUT
+          echo "enable_plan=${{ github.event_name == 'pull_request' || github.ref_name == 'develop' }}" >> $GITHUB_OUTPUT
+          echo "enable_apply=${{ (github.ref_name == 'main' || github.ref_name == 'develop') && github.event_name == 'push' }}" >> $GITHUB_OUTPUT
+          echo "is_pull_request=${{ github.event_name == 'pull_request' }}" >> $GITHUB_OUTPUT
   
   terraform_common:      
     needs: init
@@ -27,7 +33,7 @@ jobs:
       terraform_dir: "terraform/common"
       enable_plan: ${{ needs.init.outputs.enable_plan }}
       enable_apply: ${{ needs.init.outputs.enable_apply }}
-      enable_write_comments: ${{ needs.init.outputs.enable_write_comments }}
+      is_pull_request: ${{ needs.init.outputs.is_pull_request }}
   
   terraform_env:
     needs: init
@@ -38,4 +44,4 @@ jobs:
       terraform_dir: "terraform/env/${{ needs.init.outputs.environment }}"
       enable_plan: ${{ needs.init.outputs.enable_plan }}
       enable_apply: ${{ needs.init.outputs.enable_apply }}
-      enable_write_comments: ${{ needs.init.outputs.enable_write_comments }}
+      is_pull_request: ${{ needs.init.outputs.is_pull_request }}

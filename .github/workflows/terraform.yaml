@@ -2,20 +2,20 @@ on:
   workflow_call:
     inputs:      
       environment:
-          required: true
-          type: string
+        required: true
+        type: string
       terraform_dir:
-          required: true
-          type: string
+        required: true
+        type: string
       enable_plan:
-          required: true
-          type: boolean
+        required: true
+        type: boolean
       enable_apply:
-          required: true
-          type: boolean
-      enable_write_comments:
-          required: true
-          type: boolean
+        required: true
+        type: boolean
+      is_pull_request:
+        required: true
+        type: boolean
 permissions:
   issues: write
   pull-requests: write
@@ -65,7 +65,7 @@ jobs:
 
       - name: Atualização do Pull Request
         uses: actions/github-script@v7
-        if: inputs.enable_write_comments
+        if: inputs.is_pull_request
         env:
           PLAN: ${{ steps.plan.outputs.stdout }}
         with:
