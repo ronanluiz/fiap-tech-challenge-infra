@@ -25,7 +25,7 @@ resource "aws_security_group" "cluster_ssh" {
   name   = "${var.eks_name}-ssh-sg"
   vpc_id = module.vpc.vpc_id
   tags = {
-    Name = "${local.eks_name}-ssh-sg"
+    Name = "${var.eks_name}-ssh-sg"
   }
 
   ingress {
