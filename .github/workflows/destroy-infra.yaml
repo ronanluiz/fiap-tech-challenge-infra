@@ -1,10 +1,10 @@
-name: "Desprovisionamento de infraestrutura básica para as aplicações"
+name: "Destroy infra"
 on:
   workflow_dispatch:
     inputs:
       environment:
         type: choice
-        description: Ambientes
+        description: Environment
         options: 
         - dev
         - prod 
@@ -13,7 +13,6 @@ env:
   TERRAFORM_COMMON_PATH: "terraform/common"
 jobs:
   destroi_infra:
-    name: "Desprovisionamento da infra para aplicações do techchallenge"
     runs-on: ubuntu-latest
     steps:
       - name: Checkout do repositório
@@ -37,7 +36,7 @@ jobs:
           terraform -chdir=$TERRAFORM_ENV_PATH init
           terraform -chdir=$TERRAFORM_COMMON_PATH init
         
-      - name: Desprovisionando infra
+      - name: Terraform destroy
         run: |
           terraform -chdir=$TERRAFORM_ENV_PATH destroy -auto-approve
           terraform -chdir=$TERRAFORM_COMMON_PATH destroy -auto-approve
