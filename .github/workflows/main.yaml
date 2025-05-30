@@ -2,6 +2,8 @@ name: "Criação de Infraestrutura básica para as aplicações"
 on:
   push:
     branches: [main, develop]
+    paths:
+      - 'terraform/**'
   pull_request:
 
 permissions:
