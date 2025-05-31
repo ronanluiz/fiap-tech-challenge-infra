@@ -2,6 +2,38 @@
 
 Este repositório contém scripts Terraform responsáveis por criar e gerenciar uma infraestrutura AWS composta por VPC, Security Groups, ECR e EKS. O estado do Terraform é armazenado em um bucket S3, configurado através do script `setup.sh`. A infraestrutura é disponibilizada através de workflows do GitHub Actions.
 
+## Diagrama de Fluxo de CI/CD e Provisionamento
+
+```mermaid
+flowchart LR
+    subgraph GitHub
+        Code[Código Fonte] --> |Trigger| Actions[GitHub Actions]
+        Actions --> |Deploy| TerraformDeploy[Deploy Terraform]
+    end
+
+    subgraph Terraform["Provisionamento Terraform"]
+        TerraformDeploy --> VpcTF[VPC]
+        TerraformDeploy --> SgTF[SecurityGroups]
+        TerraformDeploy --> EksTF[EKS]
+        TerraformDeploy --> EcrTF[ECR]
+    end
+
+    subgraph AWS["Infraestrutura AWS"]
+        VpcTF --> |Provisiona| VpcAWS[VPC - Virtual Private Clous]
+        SgTF --> |Provisiona| SgAWS[Security Groups]
+        EksTF --> |Provisiona| EksAWS[EKS - Elastic Kubernetes Service]
+        EcrTF --> |Provisiona| EcrAWS[ECR - Elastic Container Registry]
+    end
+
+    classDef github fill:#24292E,stroke:#24292E,stroke-width:2px,color:white;
+    classDef terraform fill:#5C4EE5,stroke:#5C4EE5,stroke-width:2px,color:white;
+    classDef aws fill:#FF9900,stroke:#232F3E,stroke-width:2px,color:white;
+  
+    class Code,Actions,AppBuild github;
+    class TerraformDeploy,EcrTF,EksTF,VpcTF,SgTF terraform;
+    class EcrAWS,EksAWS,VpcAWS,SgAWS aws;
+```
+
 ## Estrutura do Repositório
 
 ```
